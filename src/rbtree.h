@@ -34,17 +34,17 @@ rbtree rbtree_init();
 /**
  *
  */
-void *rbtree_search_node(rbtree, unsigned);
+void *rbtree_search(rbtree, unsigned);
 
 /**
  *
  */
-void *rbtree_insert_node(rbtree, unsigned, void*, size_t);
+void *rbtree_insert(rbtree, unsigned, void*, size_t);
 
 /**
  * 
  */
-void *rbtree_remove_node(rbtree, unsigned);
+void *rbtree_remove(rbtree, unsigned);
 
 /**
  *
