@@ -54,7 +54,7 @@ rbtree rbtree_init() {
 /**
  *
  */
-void *rbtree_search_node(rbtree rbt, unsigned key) {
+void *rbtree_search(rbtree rbt, unsigned key) {
 
     return NULL;
 }
@@ -62,7 +62,7 @@ void *rbtree_search_node(rbtree rbt, unsigned key) {
 /**
  *
  */
-void *rbtree_insert_node(rbtree rbt, unsigned key, void *value, size_t v_size) {
+void *rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
 
     return NULL;
 }
@@ -76,7 +76,7 @@ static void __rbtree_node_free(struct __rbtree_node *node) {
 /**
  * 
  */
-void *rbtree_remove_node(rbtree rbt, unsigned key) {
+void *rbtree_remove(rbtree rbt, unsigned key) {
 
     return NULL;
 }
