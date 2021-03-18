@@ -39,7 +39,7 @@ void *rbtree_search(rbtree, unsigned);
 /**
  *
  */
-void *rbtree_insert(rbtree, unsigned, void*, size_t);
+int rbtree_insert(rbtree, unsigned, void*, size_t);
 
 /**
  * 
