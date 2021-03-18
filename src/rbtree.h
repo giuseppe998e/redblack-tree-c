@@ -34,7 +34,12 @@ rbtree rbtree_init();
 /**
  *
  */
-void *rbtree_search(rbtree, unsigned);
+int rbtree_search(rbtree, unsigned);
+
+/**
+ *
+ */
+void *rbtree_get(rbtree, unsigned);
 
 /**
  *
