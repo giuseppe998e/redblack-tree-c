@@ -25,11 +25,11 @@
  * 
  */
 struct __rbtree_node {
-    unsigned key,      // Key used to balance the rbtree
-             color:1;  // Color of the node [0: Black, 1: Red]
-    void *value;       // Void pointer to the value stored in the node
-    struct __rbtree_node *link[3]; // Link to the parent/left/right node 
-                                   // [0:Parent, 1:Left, 2:Right]
+    unsigned key:31,  // Key used to balance the rbtree (SPACE OPTIMIZATION)
+            color:1;  // Color of the node [0: Black, 1: Red]
+    void *value;      // Void pointer to the value stored in the node
+    struct __rbtree_node *link[3];  // Link to the parent/left/right node 
+                                    // [0:Left, 1:Right, 2:Parent]
 };
 
 /**
