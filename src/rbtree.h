@@ -1,5 +1,5 @@
 /**
- * RedBlack-Tree-c - Another implementation of a C red-black tree
+ * RedBlack-Tree-C - Another C implementation of a red-black tree
  * Copyright (C) 2021 - Giuseppe Eletto <peppe.eletto@gmail.com>
  *
  * This library is free software: you can redistribute it and/or
