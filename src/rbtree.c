@@ -21,6 +21,11 @@
 
 #include "rbtree.h"
 
+#define BLACK 0
+#define  RED  1
+
+#define PARENT 2
+
 /**
  * 
  */
