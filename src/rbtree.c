@@ -24,21 +24,21 @@
 /**
  * 
  */
-struct __rbtree_node {
+struct __rbt_node {
     unsigned key:31,  // Key used to balance the rbtree (SPACE OPTIMIZATION)
             color:1;  // Color of the node [0: Black, 1: Red]
     void *value;      // Void pointer to the value stored in the node
-    struct __rbtree_node *link[3];  // Link to the parent/left/right node 
-                                    // [0:Left, 1:Right, 2:Parent]
+    struct __rbt_node *link[3];  // Link to the parent/left/right node 
+                                 // [0:Left, 1:Right, 2:Parent]
 };
 
 /**
  * 
  */
 struct __rbtree {
-    struct __rbtree_node *root;
+    struct __rbt_node *root;
 };
- 
+
 /**
  * 
  */
