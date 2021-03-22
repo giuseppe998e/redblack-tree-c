@@ -96,9 +96,9 @@ void *rbtree_get(rbtree rbt, unsigned key) {
  *
  */
 static void __rbt_node_rotate(rbtree rbt, struct __rbt_node *node, int dir) {
-    struct __rbt_node *tmp = node->link[ !dir/* dir ^ 1 */ ];
+    struct __rbt_node *tmp = node->link[ !dir ];
 
-    node->link[ !dir ] = tmp->link[ dir ]; 
+    node->link[ !dir ] = tmp->link[ dir ];
 
     if (tmp->link[ dir ])
         (tmp->link[ dir ])->link[ PARENT ] = node;
