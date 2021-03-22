@@ -54,7 +54,35 @@ rbtree rbtree_init() {
 /**
  *
  */
-void *rbtree_search(rbtree rbt, unsigned key) {
+int rbtree_search(rbtree rbt, unsigned key) {
+    struct __rbt_node *node = rbt->root;
+    while (node) {
+        // If node key is equal to the searched one,
+        // return true
+        if (node->key == key)
+            return 1;
+
+        // Go to next node
+        node = node->link[ node->key < key ];
+    }
+
+    return 0;
+}
+
+/**
+ *
+ */
+void *rbtree_get(rbtree rbt, unsigned key) {
+    struct __rbt_node *node = rbt->root;
+    while (node) {
+        // If node key is equal to the searched one,
+        // return value ptr
+        if (node->key == key)
+            return node->value;
+
+        // Go to next node
+        node = node->link[ node->key < key ];
+    }
 
     return NULL;
 }
