@@ -236,6 +236,15 @@ int rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
     return 1;
 }
 
+/**
+ * 
+ */
+static void __rbt_node_free(struct __rbt_node *node) {
+    if (!node)
+        return;
+
+    free(node->value);
+    free(node);
 }
 
 /**
@@ -249,10 +258,34 @@ void *rbtree_remove(rbtree rbt, unsigned key) {
 /**
  *
  */
-void rbtree_free(rbtree rbt) {
-    if (!rbt)
-        return;
+static struct __rbt_node *__rbtree_find_bttm_lft(struct __rbt_node *node) {
+    while (node->link[0])
+        node = node->link[0];
 
-    __rbtree_node_free(rbt->root);
+    return node;
+}
+
+/**
+ *
+ */
+void rbtree_free(rbtree rbt) {
+    // Free up red-black tree
+    if (rbt->root) {
+        struct __rbt_node *node = rbt->root,
+                        *bttm_lft = __rbtree_find_bttm_lft(node);
+
+        while (node) {
+            if (node->link[1]) {
+                bttm_lft->link[0] = node->link[1];
+                bttm_lft = __rbtree_find_bttm_lft(bttm_lft);
+            }
+
+            struct __rbt_node *tmp = node;
+            node = node->link[0];
+            __rbt_node_free(tmp);
+        }
+    }
+
+    // Free up rbtree struct
     free(rbt);
 }
