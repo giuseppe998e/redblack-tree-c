@@ -251,7 +251,7 @@ static void __rbt_node_free(struct __rbt_node *node) {
  * 
  */
 void *rbtree_remove(rbtree rbt, unsigned key) {
-
+    // TODO ...
     return NULL;
 }
 
