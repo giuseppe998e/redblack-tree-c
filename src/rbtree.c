@@ -276,7 +276,7 @@ void rbtree_free(rbtree rbt) {
 
         while (node) {
             if (RIGHT_OF(node)) {
-                LEFT_OF(node) = RIGHT_OF(node);
+                LEFT_OF(bttm_lft) = RIGHT_OF(node);
                 bttm_lft = __rbt_find_bttm_lft(bttm_lft);
             }
 
