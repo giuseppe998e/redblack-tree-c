@@ -102,36 +102,6 @@ static struct __rbt_node *__rbt_node_new(unsigned key, void *value, size_t v_siz
 /**
  * 
  */
-static struct __rbt_node *__rbt_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
-    // Search for parent node
-    struct __rbt_node *node = rbt->root,
-                      *parent = NULL;
-    while (node && (node->key != key)) {
-        parent = node;
-        node = node->link[ node->key < key ];
-    }
-
-    // If node exist, do not re-insert
-    if (node)
-        return NULL;
-
-    // Create node to insert
-    struct __rbt_node *new_node = __rbt_node_new(key, value, v_size);
-    if (!new_node)
-        return NULL;
-
-    // Else, insert new node
-    PARENT_OF(new_node) = parent;
-
-    if (parent)
-        return parent->link[ parent->key < key ] = new_node;
-    else
-        return rbt->root = new_node;
-}
-
-/**
- * 
- */
 static void __rbt_node_rotate(rbtree rbt, struct __rbt_node *node, int dir) {
     struct __rbt_node *tmp = node->link[ !dir ];
 
@@ -202,10 +172,31 @@ static void __rbt_rest_prop(rbtree rbt, struct __rbt_node *node) {
  * 
  */
 int rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
-    // Insert new node into the tree
-    struct __rbt_node *new_node = __rbt_insert(rbt, key, value, v_size);
+    // Search for parent node
+    struct __rbt_node *node = rbt->root,
+                      *parent = NULL;
+    while (node && (node->key != key)) {
+        parent = node;
+        node = node->link[ node->key < key ];
+    }
+
+    // If node exist, do not re-insert
+    if (node)
+        return 0;
+
+    // Create node to insert
+    struct __rbt_node *new_node = __rbt_node_new(key, value, v_size);
     if (!new_node)
         return 0;
+
+    // Else, insert new node
+    PARENT_OF(new_node) = parent;
+
+    // Set node parent (if any)
+    if (parent)
+        parent->link[ parent->key < key ] = new_node;
+    else
+        rbt->root = new_node;
 
     // Restore the red-black property
     __rbt_rest_prop(rbt, new_node);
