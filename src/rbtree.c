@@ -65,36 +65,6 @@ rbtree rbtree_init() {
 /**
  *
  */
-static struct __rbt_node *__rbtree_get_node(rbtree rbt, unsigned key) {
-    struct __rbt_node *node = rbt->root;
-    while (node && (node->key != key))
-        node = node->link[ node->key < key ];
-
-    return node;
-}
-
-/**
- *
- */
-int rbtree_search(rbtree rbt, unsigned key) {
-    struct __rbt_node *node = __rbtree_get_node(rbt, key);
-    return !!node;
-}
-
-/**
- *
- */
-void *rbtree_get(rbtree rbt, unsigned key) {
-    struct __rbt_node *node = __rbtree_get_node(rbt, key);
-    if (!node)
-        return NULL;
-    
-    return node->value;
-}
-
-/**
- *
- */
 static void __rbt_node_rotate(rbtree rbt, struct __rbt_node *node, int dir) {
     struct __rbt_node *tmp = node->link[ !dir ];
 
@@ -240,14 +210,33 @@ int rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
 }
 
 /**
- * 
+ *
  */
-static void __rbt_node_free(struct __rbt_node *node) {
-    if (!node)
-        return;
+static struct __rbt_node *__rbtree_get_node(rbtree rbt, unsigned key) {
+    struct __rbt_node *node = rbt->root;
+    while (node && (node->key != key))
+        node = node->link[ node->key < key ];
 
-    free(node->value);
-    free(node);
+    return node;
+}
+
+/**
+ *
+ */
+void *rbtree_get(rbtree rbt, unsigned key) {
+    struct __rbt_node *node = __rbtree_get_node(rbt, key);
+    if (!node)
+        return NULL;
+    
+    return node->value;
+}
+
+/**
+ *
+ */
+int rbtree_search(rbtree rbt, unsigned key) {
+    struct __rbt_node *node = __rbtree_get_node(rbt, key);
+    return !!node;
 }
 
 /**
@@ -256,6 +245,14 @@ static void __rbt_node_free(struct __rbt_node *node) {
 void *rbtree_remove(rbtree rbt, unsigned key) {
     // TODO ...
     return NULL;
+}
+
+/**
+ * 
+ */
+void rbtree_delete(rbtree rbt, unsigned key) {
+    void *ptr = rbtree_remove(rbt, key);
+    free(ptr);
 }
 
 /**
@@ -285,7 +282,9 @@ void rbtree_free(rbtree rbt) {
 
             struct __rbt_node *tmp = node;
             node = LEFT_OF(node);
-            __rbt_node_free(tmp);
+
+            free(tmp->value);
+            free(tmp);
         }
     }
 

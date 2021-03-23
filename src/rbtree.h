@@ -32,17 +32,6 @@ typedef struct __rbtree *rbtree;
 rbtree rbtree_init();
 
 /**
- * Looks for a node in the RedBlack-Tree.
- */
-int rbtree_search(rbtree, unsigned);
-
-/**
- * Looks for a node in the RedBlack-Tree
- * and returns the pointer to its stored value.
- */
-void *rbtree_get(rbtree, unsigned);
-
-/**
  * Inserts a new node in the RedBlack-Tree.
  * If size_t is equal to zero but not the void*,
  * a reference to that pointer is saved, otherwise
@@ -52,9 +41,15 @@ void *rbtree_get(rbtree, unsigned);
 int rbtree_insert(rbtree, unsigned, void*, size_t);
 
 /**
- * Deletes a node from the RedBlack-Tree.
+ * Looks for a node in the RedBlack-Tree
+ * and returns the pointer to its stored value.
  */
-void rbtree_delete(rbtree, unsigned); // TODO NOTIMPL
+void *rbtree_get(rbtree, unsigned);
+
+/**
+ * Looks for a node in the RedBlack-Tree.
+ */
+int rbtree_search(rbtree, unsigned);
 
 /**
  * Removes a node from the RedBlack-Tree
@@ -62,6 +57,11 @@ void rbtree_delete(rbtree, unsigned); // TODO NOTIMPL
  * which MUST be freed!
  */
 void *rbtree_remove(rbtree, unsigned); // TODO NOTIMPL
+
+/**
+ * Deletes a node from the RedBlack-Tree.
+ */
+void rbtree_delete(rbtree, unsigned); // TODO NOTIMPL
 
 /**
  * Frees a RedBlack-Tree.
