@@ -52,6 +52,9 @@ int main(int argc, char **argv) {
     rbtree_insert(rbt, 9, 0, 0);
     rbtree_insert(rbt, 0, 0, 0);
 
+    // Print nodes count
+    printf("Num# nodes: %u\n", rbtree_nodes(rbt));
+
     // Check nodes existence
     printf("Exists hll? %c\n", rbtree_search(rbt, 6) ? 'Y' : 'N');
     printf("Exists wrld? %c\n", rbtree_search(rbt, 4) ? 'Y' : 'N');
