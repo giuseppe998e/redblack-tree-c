@@ -47,18 +47,22 @@ struct __rbt_node {
  * 
  */
 struct __rbtree {
-    struct __rbt_node *root;
+    struct __rbt_node *root;  // Tree root node
+    void (*free_v)(void*);    // Ptr to value custom free function
 };
 
 /**
  * 
  */
-rbtree rbtree_init() {
+rbtree rbtree_init(void *free_v) {
     struct __rbtree *rbt = malloc(sizeof(*rbt));
     if (!rbt)
         return NULL;
 
+    // Init struct
     rbt->root = NULL;
+    rbt->free_v = free_v ? free_v : free;
+
     return rbt;
 }
 
@@ -252,7 +256,7 @@ void *rbtree_remove(rbtree rbt, unsigned key) {
  */
 void rbtree_delete(rbtree rbt, unsigned key) {
     void *ptr = rbtree_remove(rbt, key);
-    free(ptr);
+    rbt->free_v(ptr);
 }
 
 /**
@@ -273,7 +277,7 @@ void rbtree_free(rbtree rbt) {
             tmp = node;
             node = LEFT_OF(node);
 
-            free(tmp->value);
+            rbt->free_v(tmp->value);
             free(tmp);
         }
     }

@@ -28,8 +28,12 @@ typedef struct __rbtree *rbtree;
 
 /**
  * Initializes a new empty RedBlack-Tree.
+ * A pointer to a custom "free" function may
+ * be passed to deallocate the stored nodes 
+ * value. Otherwise a simple "free" function 
+ * is called to deallocate these.
  */
-rbtree rbtree_init();
+rbtree rbtree_init(void*);
 
 /**
  * Inserts a new node in the RedBlack-Tree.
