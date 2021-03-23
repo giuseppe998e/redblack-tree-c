@@ -138,10 +138,10 @@ static void __rbt_node_rotate(rbtree rbt, struct __rbt_node *node, int dir) {
 
     PARENT_OF(tmp) = PARENT_OF(node);
 
-    if (!PARENT_OF(node))
-        rbt->root = tmp;
-    else
+    if (PARENT_OF(node))
         PARENT_OF(node)->link[ node != PARENT_OF(node)->link[ dir ] ] = tmp;
+    else
+        rbt->root = tmp;
 
     tmp->link[ dir ] = node;
     PARENT_OF(node) = tmp;
