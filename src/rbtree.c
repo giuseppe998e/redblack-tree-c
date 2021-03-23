@@ -54,7 +54,7 @@ struct __rbtree {
 /**
  * 
  */
-rbtree rbtree_init(void *free_v) {
+rbtree rbtree_init(void (*free_v)(void*)) {
     struct __rbtree *rbt = malloc(sizeof(*rbt));
     if (!rbt)
         return NULL;

@@ -33,7 +33,7 @@ typedef struct __rbtree *rbtree;
  * value. Otherwise a simple "free" function 
  * is called to deallocate these.
  */
-rbtree rbtree_init(void*);
+rbtree rbtree_init(void(*)(void*));
 
 /**
  * Inserts a new node in the RedBlack-Tree.
