@@ -65,28 +65,6 @@ rbtree rbtree_init() {
 /**
  *
  */
-static void __rbt_node_rotate(rbtree rbt, struct __rbt_node *node, int dir) {
-    struct __rbt_node *tmp = node->link[ !dir ];
-
-    node->link[ !dir ] = tmp->link[ dir ];
-
-    if (tmp->link[ dir ])
-        PARENT_OF(tmp->link[ dir ]) = node;
-
-    PARENT_OF(tmp) = PARENT_OF(node);
-
-    if (!PARENT_OF(node))
-        rbt->root = tmp;
-    else
-        PARENT_OF(node)->link[ node != PARENT_OF(node)->link[ dir ] ] = tmp;
-
-    tmp->link[ dir ] = node;
-    PARENT_OF(node) = tmp;
-}
-
-/**
- *
- */
 static struct __rbt_node *__rbt_node_new(unsigned key, void *value, size_t v_size) {
     // Create a new tree node
     struct __rbt_node *node = malloc(sizeof(*node));
@@ -145,6 +123,28 @@ static struct __rbt_node *__rbtree_insert(rbtree rbt, unsigned key, void *value,
         return parent->link[ parent->key < key ] = new_node;
     else 
         return rbt->root = new_node;
+}
+
+/**
+ *
+ */
+static void __rbt_node_rotate(rbtree rbt, struct __rbt_node *node, int dir) {
+    struct __rbt_node *tmp = node->link[ !dir ];
+
+    node->link[ !dir ] = tmp->link[ dir ];
+
+    if (tmp->link[ dir ])
+        PARENT_OF(tmp->link[ dir ]) = node;
+
+    PARENT_OF(tmp) = PARENT_OF(node);
+
+    if (!PARENT_OF(node))
+        rbt->root = tmp;
+    else
+        PARENT_OF(node)->link[ node != PARENT_OF(node)->link[ dir ] ] = tmp;
+
+    tmp->link[ dir ] = node;
+    PARENT_OF(node) = tmp;
 }
 
 /**
