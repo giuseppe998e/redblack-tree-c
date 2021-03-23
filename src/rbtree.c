@@ -258,29 +258,19 @@ void rbtree_delete(rbtree rbt, unsigned key) {
 /**
  * 
  */
-static struct __rbt_node *__rbt_find_bttm_lft(struct __rbt_node *node) {
-    while (LEFT_OF(node))
-        node = LEFT_OF(node);
-
-    return node;
-}
-
-/**
- * 
- */
 void rbtree_free(rbtree rbt) {
     // Free up red-black tree
     if (rbt->root) {
         struct __rbt_node *node = rbt->root,
-                        *bttm_lft = __rbt_find_bttm_lft(node);
+                            *lft_mst = node,
+                            *tmp;
 
         while (node) {
-            if (RIGHT_OF(node)) {
-                LEFT_OF(bttm_lft) = RIGHT_OF(node);
-                bttm_lft = __rbt_find_bttm_lft(bttm_lft);
-            }
+            while (LEFT_OF(lft_mst))
+                lft_mst = LEFT_OF(lft_mst);
 
-            struct __rbt_node *tmp = node;
+            LEFT_OF(lft_mst) = RIGHT_OF(node);
+            tmp = node;
             node = LEFT_OF(node);
 
             free(tmp->value);
