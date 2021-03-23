@@ -35,11 +35,11 @@
 /**
  * 
  */
-struct __rbt_node {
+struct __node {
     unsigned key:31,  // Key used to balance the rbtree (SPACE OPTIMIZATION)
             color:1;  // Color of the node [0: Black, 1: Red]
     void *value;      // Void pointer to the value stored in the node
-    struct __rbt_node *link[3];  // Link to the parent/left/right node
+    struct __node *link[3];  // Link to the parent/left/right node
                                  // [0:Left, 1:Right, 2:Parent]
 };
 
@@ -47,7 +47,7 @@ struct __rbt_node {
  * 
  */
 struct __rbtree {
-    struct __rbt_node *root;  // Tree root node
+    struct __node *root;  // Tree root node
     unsigned nodes_c;         // Nodes count
     void (*free_v)(void*);    // Ptr to value custom free function
 };
@@ -78,9 +78,9 @@ unsigned rbtree_nodes(rbtree rbt) {
 /**
  * 
  */
-static struct __rbt_node *__rbt_node_new(unsigned key, void *value, size_t v_size) {
+static struct __node *__node_new(unsigned key, void *value, size_t v_size) {
     // Create a new tree node
-    struct __rbt_node *node = malloc(sizeof(*node));
+    struct __node *node = malloc(sizeof(*node));
     if (!node)
         return NULL;
 
@@ -111,8 +111,8 @@ static struct __rbt_node *__rbt_node_new(unsigned key, void *value, size_t v_siz
 /**
  * 
  */
-static void __rbt_node_rotate(rbtree rbt, struct __rbt_node *node, int dir) {
-    struct __rbt_node *tmp = node->link[ !dir ];
+static void __node_rotate(rbtree rbt, struct __node *node, int dir) {
+    struct __node *tmp = node->link[ !dir ];
 
     node->link[ !dir ] = tmp->link[ dir ];
 
@@ -133,20 +133,20 @@ static void __rbt_node_rotate(rbtree rbt, struct __rbt_node *node, int dir) {
 /**
  * 
  */
-static void __rbt_fixup(rbtree rbt, struct __rbt_node *node) {
+static void __fixup(rbtree rbt, struct __node *node) {
     node->color = RED;
 
     while ((node != rbt->root) &&
             (PARENT_OF(node)->color == RED))
     {
         // Set parent and grandparent
-        struct __rbt_node *parent = PARENT_OF(node),
+        struct __node *parent = PARENT_OF(node),
                           *grandp = PARENT_OF(parent);
 
         for (int dir = 0; dir < 2; ++dir) {
             // Parent is LEFT(0)/RIGHT(1) child of GrandParent
             if (parent == grandp->link[ dir ]) {
-                struct __rbt_node *uncle = grandp->link[ !dir ];
+                struct __node *uncle = grandp->link[ !dir ];
 
                 if (uncle && uncle->color == RED) {
                     grandp->color = RED;
@@ -156,12 +156,12 @@ static void __rbt_fixup(rbtree rbt, struct __rbt_node *node) {
 
                 else {
                     if (node == parent->link[ !dir ]) {
-                        __rbt_node_rotate(rbt, parent, dir);
+                        __node_rotate(rbt, parent, dir);
                         node = parent;
                         parent = PARENT_OF(node);
                     }
 
-                    __rbt_node_rotate(rbt, grandp, !dir);
+                    __node_rotate(rbt, grandp, !dir);
                     int tmp_color = parent->color;
                     parent->color = grandp->color;
                     grandp->color = tmp_color;
@@ -182,7 +182,7 @@ static void __rbt_fixup(rbtree rbt, struct __rbt_node *node) {
  */
 int rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
     // Search for parent node
-    struct __rbt_node *node = rbt->root,
+    struct __node *node = rbt->root,
                       *parent = NULL;
     while (node && (node->key != key)) {
         parent = node;
@@ -194,7 +194,7 @@ int rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
         return 0;
 
     // Create node to insert
-    struct __rbt_node *new_node = __rbt_node_new(key, value, v_size);
+    struct __node *new_node = __node_new(key, value, v_size);
     if (!new_node)
         return 0;
 
@@ -208,7 +208,7 @@ int rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
         rbt->root = new_node;
 
     // Restore the red-black property
-    __rbt_fixup(rbt, new_node);
+    __fixup(rbt, new_node);
 
     ++rbt->nodes_c;
     return 1;
@@ -217,8 +217,8 @@ int rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
 /**
  * 
  */
-static struct __rbt_node *__rbt_get_node(rbtree rbt, unsigned key) {
-    struct __rbt_node *node = rbt->root;
+static struct __node *__get_node(rbtree rbt, unsigned key) {
+    struct __node *node = rbt->root;
     while (node && (node->key != key))
         node = node->link[ node->key < key ];
 
@@ -229,7 +229,7 @@ static struct __rbt_node *__rbt_get_node(rbtree rbt, unsigned key) {
  * 
  */
 void *rbtree_get(rbtree rbt, unsigned key) {
-    struct __rbt_node *node = __rbt_get_node(rbt, key);
+    struct __node *node = __get_node(rbt, key);
     if (!node)
         return NULL;
 
@@ -240,7 +240,7 @@ void *rbtree_get(rbtree rbt, unsigned key) {
  * 
  */
 int rbtree_search(rbtree rbt, unsigned key) {
-    struct __rbt_node *node = __rbt_get_node(rbt, key);
+    struct __node *node = __get_node(rbt, key);
     return !!node;
 }
 
@@ -266,7 +266,7 @@ void rbtree_delete(rbtree rbt, unsigned key) {
 void rbtree_free(rbtree rbt) {
     // Free up red-black tree
     if (rbt->root) {
-        struct __rbt_node *node = rbt->root,
+        struct __node *node = rbt->root,
                             *lft_mst = node;
 
         while (node) {
@@ -275,7 +275,7 @@ void rbtree_free(rbtree rbt) {
 
             LEFT_OF(lft_mst) = RIGHT_OF(node);
 
-            struct __rbt_node *tmp = node;
+            struct __node *tmp = node;
             node = LEFT_OF(node);
 
             rbt->free_v(tmp->value);
