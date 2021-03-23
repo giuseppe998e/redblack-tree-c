@@ -257,15 +257,15 @@ void rbtree_free(rbtree rbt) {
     // Free up red-black tree
     if (rbt->root) {
         struct __rbt_node *node = rbt->root,
-                            *lft_mst = node,
-                            *tmp;
+                            *lft_mst = node;
 
         while (node) {
             while (LEFT_OF(lft_mst))
                 lft_mst = LEFT_OF(lft_mst);
 
             LEFT_OF(lft_mst) = RIGHT_OF(node);
-            tmp = node;
+
+            struct __rbt_node *tmp = node;
             node = LEFT_OF(node);
 
             rbt->free_v(tmp->value);
