@@ -22,37 +22,45 @@
 #include <stddef.h>
 
 /**
- * 
+ * RedBlack-Tree pointer
  */
 typedef struct __rbtree *rbtree;
 
 /**
- * 
+ * Initializes a new empty RedBlack-Tree
  */
 rbtree rbtree_init();
 
 /**
- *
+ * Looks for a node in the RedBlack-Tree
  */
 int rbtree_search(rbtree, unsigned);
 
 /**
- *
+ * Looks for a node in the RedBlack-Tree
+ * and returns the pointer to its stored value
  */
 void *rbtree_get(rbtree, unsigned);
 
 /**
- *
+ * Inserts a new node into the RedBlack-Tree
  */
 int rbtree_insert(rbtree, unsigned, void*, size_t);
 
 /**
- * 
+ * Deletes a node from the RedBlack-Tree
  */
-void *rbtree_remove(rbtree, unsigned);
+void rbtree_delete(rbtree, unsigned); // TODO NOTIMPL
 
 /**
- *
+ * Removes a node from the RedBlack-Tree
+ * and returns the pointer to its stored value
+ * which MUST be freed!
+ */
+void *rbtree_remove(rbtree, unsigned); // TODO NOTIMPL
+
+/**
+ * Frees a RedBlack-Tree
  */
 void rbtree_free(rbtree);
 
