@@ -36,6 +36,12 @@ typedef struct __rbtree *rbtree;
 rbtree rbtree_init(void(*)(void*));
 
 /**
+ * Returns the number of nodes in the
+ * RedBlack-Tree.
+ */
+unsigned rbtree_nodes(rbtree);
+
+/**
  * Inserts a new node in the RedBlack-Tree.
  * If size_t is equal to zero but not the void*,
  * a reference to that pointer is saved, otherwise

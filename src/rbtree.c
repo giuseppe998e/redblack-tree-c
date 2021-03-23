@@ -48,6 +48,7 @@ struct __rbt_node {
  */
 struct __rbtree {
     struct __rbt_node *root;  // Tree root node
+    unsigned nodes_c;         // Nodes count
     void (*free_v)(void*);    // Ptr to value custom free function
 };
 
@@ -59,11 +60,19 @@ rbtree rbtree_init(void (*free_v)(void*)) {
     if (!rbt)
         return NULL;
 
-    // Init struct
+    // Initialize RB-Tree struct
     rbt->root = NULL;
+    rbt->nodes_c = 0;
     rbt->free_v = free_v ? free_v : free;
 
     return rbt;
+}
+
+/**
+ * 
+ */
+unsigned rbtree_nodes(rbtree rbt) {
+    return rbt->nodes_c;
 }
 
 /**
@@ -201,6 +210,7 @@ int rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
     // Restore the red-black property
     __rbt_fixup(rbt, new_node);
 
+    ++rbt->nodes_c;
     return 1;
 }
 
