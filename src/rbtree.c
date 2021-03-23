@@ -124,7 +124,7 @@ static void __rbt_node_rotate(rbtree rbt, struct __rbt_node *node, int dir) {
 /**
  * 
  */
-static void __rbt_rest_prop(rbtree rbt, struct __rbt_node *node) {
+static void __rbt_fixup(rbtree rbt, struct __rbt_node *node) {
     node->color = RED;
 
     while ((node != rbt->root) &&
@@ -199,7 +199,7 @@ int rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
         rbt->root = new_node;
 
     // Restore the red-black property
-    __rbt_rest_prop(rbt, new_node);
+    __rbt_fixup(rbt, new_node);
 
     return 1;
 }
