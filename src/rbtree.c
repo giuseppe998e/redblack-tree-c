@@ -24,9 +24,13 @@
 #define BLACK 0
 #define  RED  1
 
-#define SIBLING_L(_x) (_x)->link[0]
-#define SIBLING_R(_x) (_x)->link[1]
-#define  PARENT(_x)   (_x)->link[2]
+#define LEFT   0
+#define RIGHT  1
+#define PARENT 2
+
+#define LEFT_OF(_x)   (_x)->link[ LEFT ]
+#define RIGHT_OF(_x)  (_x)->link[ RIGHT ]
+#define PARENT_OF(_x) (_x)->link[ PARENT ]
 
 /**
  * 
@@ -97,17 +101,17 @@ static void __rbt_node_rotate(rbtree rbt, struct __rbt_node *node, int dir) {
     node->link[ !dir ] = tmp->link[ dir ];
 
     if (tmp->link[ dir ])
-        PARENT(tmp->link[ dir ]) = node;
+        PARENT_OF(tmp->link[ dir ]) = node;
 
-    PARENT(tmp) = PARENT(node);
+    PARENT_OF(tmp) = PARENT_OF(node);
 
-    if (!PARENT(node))
+    if (!PARENT_OF(node))
         rbt->root = tmp;
     else
-        PARENT(node)->link[ node != PARENT(node)->link[ dir ] ] = tmp;
+        PARENT_OF(node)->link[ node != PARENT_OF(node)->link[ dir ] ] = tmp;
 
     tmp->link[ dir ] = node;
-    PARENT(node) = tmp;
+    PARENT_OF(node) = tmp;
 }
 
 /**
@@ -135,9 +139,9 @@ static struct __rbt_node *__rbt_node_new(unsigned key, void *value, size_t v_siz
 
     // Set all links to NULL
     // TODO better impl?
-    SIBLING_L(node) =
-        SIBLING_R(node) =
-            PARENT(node) = NULL;
+    LEFT_OF(node) =
+        RIGHT_OF(node) =
+            PARENT_OF(node) = NULL;
 
     // Return the new node
     return node;
@@ -165,7 +169,7 @@ static struct __rbt_node *__rbtree_insert(rbtree rbt, unsigned key, void *value,
         return NULL;
 
     // Else, insert new node
-    PARENT(new_node) = parent;
+    PARENT_OF(new_node) = parent;
 
     if (parent)
         return parent->link[ parent->key < key ] = new_node;
@@ -180,11 +184,11 @@ static void __rbtree_rest_prop(rbtree rbt, struct __rbt_node *node) {
     node->color = RED;
 
     while ((node != rbt->root) && 
-            (PARENT(node)->color == RED))
+            (PARENT_OF(node)->color == RED))
     {
         // Set parent and grandparent
-        struct __rbt_node *parent = PARENT(node),
-                          *grandp = PARENT(parent);
+        struct __rbt_node *parent = PARENT_OF(node),
+                          *grandp = PARENT_OF(parent);
 
         for (int dir = 0; dir < 2; ++dir) {
             // Parent is LEFT(0)/RIGHT(1) child of GrandParent
@@ -201,7 +205,7 @@ static void __rbtree_rest_prop(rbtree rbt, struct __rbt_node *node) {
                     if (node == parent->link[ !dir ]) {
                         __rbt_node_rotate(rbt, parent, dir);
                         node = parent;
-                        parent = PARENT(node);
+                        parent = PARENT_OF(node);
                     }
 
                     __rbt_node_rotate(rbt, grandp, !dir);
@@ -258,8 +262,8 @@ void *rbtree_remove(rbtree rbt, unsigned key) {
  *
  */
 static struct __rbt_node *__rbtree_find_bttm_lft(struct __rbt_node *node) {
-    while (SIBLING_L(node))
-        node = SIBLING_L(node);
+    while (LEFT_OF(node))
+        node = LEFT_OF(node);
 
     return node;
 }
@@ -274,13 +278,13 @@ void rbtree_free(rbtree rbt) {
                         *bttm_lft = __rbtree_find_bttm_lft(node);
 
         while (node) {
-            if (SIBLING_R(node)) {
-                SIBLING_L(node) = SIBLING_R(node);
+            if (RIGHT_OF(node)) {
+                LEFT_OF(node) = RIGHT_OF(node);
                 bttm_lft = __rbtree_find_bttm_lft(bttm_lft);
             }
 
             struct __rbt_node *tmp = node;
-            node = SIBLING_L(node);
+            node = LEFT_OF(node);
             __rbt_node_free(tmp);
         }
     }
