@@ -145,27 +145,30 @@ static struct __rbt_node *__rbt_node_new(unsigned key, void *value, size_t v_siz
  * 
  */
 static struct __rbt_node *__rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
+    // Search for parent node
+    struct __rbt_node *node = rbt->root,
+                      *parent = NULL;
+    while (node && (node->key != key)) {
+        parent = node;
+        node = node->link[ node->key < key ];
+    }
+
+    // If node exist, do not re-insert
+    if (node)
+        return NULL;
+
     // Create node to insert
     struct __rbt_node *new_node = __rbt_node_new(key, value, v_size);
     if (!new_node)
         return NULL;
 
-    // Insert of first node
-    if (!rbt->root) {
-        rbt->root = new_node;
-        return new_node;
-    }
-
-    // Insert of successive node
-    struct __rbt_node *node = rbt->root,
-                      *parent = NULL;
-    while (node) {
-        parent = node;
-        node = node->link[ node->key < key ];
-    }
-
+    // Else, insert new node
     new_node->link[ PARENT ] = parent;
-    return parent->link[ parent->key < key ] = new_node;
+
+    if (parent)
+        return parent->link[ parent->key < key ] = new_node;
+    else 
+        return rbt->root = new_node;
 }
 
 /**
