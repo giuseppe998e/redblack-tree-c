@@ -28,9 +28,9 @@
 #define RIGHT  1
 #define PARENT 2
 
-#define LEFT_OF(_x)   (_x)->link[ LEFT ]
-#define RIGHT_OF(_x)  (_x)->link[ RIGHT ]
-#define PARENT_OF(_x) (_x)->link[ PARENT ]
+#define LEFT_OF(_x)   ((_x)->link[ LEFT ])
+#define RIGHT_OF(_x)  ((_x)->link[ RIGHT ])
+#define PARENT_OF(_x) ((_x)->link[ PARENT ])
 
 /**
  * 
