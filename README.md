@@ -20,9 +20,8 @@ void free_value(void *v) {
     if (!v)
         return;
 
-    struct test_s *s = v;
-    free(s->txt);
-    free(s);
+    free(((struct test_s*) v)->txt);
+    free(v);
 }
 
 int main(int argc, char **argv) {
