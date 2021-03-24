@@ -40,16 +40,16 @@ struct __node {
             color:1;  // Color of the node [0: Black, 1: Red]
     void *value;      // Void pointer to the value stored in the node
     struct __node *link[3];  // Link to the parent/left/right node
-                                 // [0:Left, 1:Right, 2:Parent]
+                             // [0:Left, 1:Right, 2:Parent]
 };
 
 /**
  * 
  */
 struct __rbtree {
-    struct __node *root;  // Tree root node
-    unsigned nodes_c;         // Nodes count
-    void (*free_v)(void*);    // Ptr to value custom free function
+    struct __node *root;    // Tree root node
+    unsigned nodes_c;       // Nodes count
+    void (*free_v)(void*);  // Ptr to value custom free function
 };
 
 /**
@@ -141,7 +141,7 @@ static void __fixup(rbtree rbt, struct __node *node) {
     {
         // Set parent and grandparent
         struct __node *parent = PARENT_OF(node),
-                          *grandp = PARENT_OF(parent);
+                        *grandp = PARENT_OF(parent);
 
         for (int dir = 0; dir < 2; ++dir) {
             // Parent is LEFT(0)/RIGHT(1) child of GrandParent
@@ -183,7 +183,8 @@ static void __fixup(rbtree rbt, struct __node *node) {
 int rbtree_insert(rbtree rbt, unsigned key, void *value, size_t v_size) {
     // Search for parent node
     struct __node *node = rbt->root,
-                      *parent = NULL;
+                    *parent = NULL;
+
     while (node && (node->key != key)) {
         parent = node;
         node = node->link[ node->key < key ];
@@ -267,7 +268,7 @@ void rbtree_free(rbtree rbt) {
     // Free up red-black tree
     if (rbt->root) {
         struct __node *node = rbt->root,
-                            *lft_mst = node;
+                        *lft_mst = node;
 
         while (node) {
             while (LEFT_OF(lft_mst))
