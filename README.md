@@ -1,4 +1,4 @@
-# RedBlack-Tree-C
+# RedBlack-Tree-C [![Version](https://img.shields.io/github/v/tag/giuseppe998e/redblack-tree-c?style=flat-square)](https://github.com/giuseppe998e/redblack-tree-c/tags)
 This is an implementation of a `Red-Black Tree` written in C just for fun and with educational purposes.  
 **It is not intended for use in a production scenario.**
 
